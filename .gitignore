@@ -1,0 +1,9 @@
+work/
+scratch/
+extracted/
+.work/
+.scratch/
+.extracted/
+build/
+clean/
+.DS_Store

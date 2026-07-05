@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "pss": [
+    {
+      "discPath": "MOVIE/OP.PSS",
+      "xorPath": "patches/fmv/MOVIE_OP.PSS.xor",
+      "originalSize": 51707908,
+      "replacementSize": 51642372,
+      "originalSha256": "404af267631c4ebfbe595cc0de7b9b231fc38a89cb9b2927f912b46f28bd72ef",
+      "replacementSha256": "3134976af2e633e946730057180d9d7fecf7512decc268a588dc5cf780a53d7b",
+      "xorSha256": "1343944f6b43941a4dca67532b03f25f2322d017195140f8e97480fd396d8966"
+    },
+    {
+      "discPath": "MOVIE/02.pss",
+      "xorPath": "patches/fmv/MOVIE_02.pss.xor",
+      "originalSize": 14172164,
+      "replacementSize": 14106628,
+      "originalSha256": "2d4ce61b931fa6c2c593661ce2f716be798431a7b504497f5704beef55a49d93",
+      "replacementSha256": "c2da570efed2428d9daa8a41b55fc38c49a4be19ca8f9d0573709e37711e1433",
+      "xorSha256": "72e74ba340994c84b2ff082fc57da25d913ca771b009df2abd213b0338fa6f48"
+    },
+    {
+      "discPath": "MOVIE/04.pss",
+      "xorPath": "patches/fmv/MOVIE_04.pss.xor",
+      "originalSize": 29753348,
+      "replacementSize": 29687812,
+      "originalSha256": "ae8d698fe77078145d25e60425f63f5847122aea73b79e1d8e249a37caa5015b",
+      "replacementSha256": "9bbfc6bb5b6ba1b73fe5188088a1a808df3eab41a2e5eec0bd9e31c00f9d9ede",
+      "xorSha256": "f9190bf4c7c1fe274cd428825879ed373525cf05c5ad364801d9dc7733a0622f"
+    },
+    {
+      "discPath": "MOVIE/05.pss",
+      "xorPath": "patches/fmv/MOVIE_05.pss.xor",
+      "originalSize": 26214404,
+      "replacementSize": 26148868,
+      "originalSha256": "3e2b73d4f09836dede37193f0a2e44a09ac15a63d0943a0bdd5fda352e0c0c21",
+      "replacementSha256": "0ab2fef9c243d8f2ad8001586486d307c6db250880794ff6d1ec4f56f3e50d79",
+      "xorSha256": "d7dbbc6aa7ac66f95eef884d382533e2d700ddee72c2a7b9777740da57120149"
+    },
+    {
+      "discPath": "MOVIE/06.pss",
+      "xorPath": "patches/fmv/MOVIE_06.pss.xor",
+      "originalSize": 14876676,
+      "replacementSize": 14811140,
+      "originalSha256": "045743e79bc1bc1402854f401870c593de224b8afb5a563ff49a32c7aeceb293",
+      "replacementSha256": "4ba4fc7f0aab397806d9a34f98a5578c905ba6d791b608caba885b23ce8c6c96",
+      "xorSha256": "9c4d70d0d939c7ed15bd5c92d3199ce4c2161bb903dac6ee7daacadd6313828c"
+    },
+    {
+      "discPath": "MOVIE/07.pss",
+      "xorPath": "patches/fmv/MOVIE_07.pss.xor",
+      "originalSize": 24084484,
+      "replacementSize": 24018948,
+      "originalSha256": "e1c1134ac20a1cc205a5f1fdb699637a67165f62ba0d80cfab2c49d36df158b2",
+      "replacementSha256": "d8b4a14a007d553eab09b06caf7931099a0723ac7b55bb6142facf5aabbb5958",
+      "xorSha256": "5cc21c8639b538e221a6d22706326722a037a5db6f8f1ac4ed824ca8607ce29c"
+    }
+  ],
+  "psi": [
+    {
+      "ufpDiscPath": "UFP/2D.UFP",
+      "ufpEntryPath": "2d/title/pt_003.psi",
+      "xorPath": "patches/psi/2d_title_pt_003.psi.indices.xor",
+      "width": 512,
+      "height": 24,
+      "sourceStride": 512,
+      "imageDataOffset": 1184,
+      "visiblePixelLength": 12288,
+      "originalIndicesSha256": "2ea4fc90122becf785b728579d35547387ac1352bbe053ec12724e82f2402129",
+      "replacementIndicesSha256": "9490d92c1f716d8616c62778eb80005846625d35656c016d020edd6a45d2a0de",
+      "xorSha256": "b2dc6aae87672afcfb0e2fed4cc16e0241501959f1b2ca50dd15e0c046bdaa28"
+    },
+    {
+      "ufpDiscPath": "UFP/2D.UFP",
+      "ufpEntryPath": "2d/saveload/psl_001.psi",
+      "xorPath": "patches/psi/2d_saveload_psl_001.psi.indices.xor",
+      "width": 424,
+      "height": 40,
+      "sourceStride": 424,
+      "imageDataOffset": 2112,
+      "visiblePixelLength": 16960,
+      "originalIndicesSha256": "fea87ee1a6e9668749a19da4dfcd288870be830a5108896534c8525c455a68b1",
+      "replacementIndicesSha256": "190b0a341374455c3fcbb558348084a39244b71ab58b86fb9120edb89cb66504",
+      "xorSha256": "62f607e3d29bb42cec1deb12c28ff9c2191d473d9ca349e796ac22b8fdb9f658"
+    },
+    {
+      "ufpDiscPath": "UFP/2D.UFP",
+      "ufpEntryPath": "2d/charaentry/pt_001.psi",
+      "xorPath": "patches/psi/2d_charaentry_pt_001.psi.indices.xor",
+      "width": 256,
+      "height": 192,
+      "sourceStride": 256,
+      "imageDataOffset": 1184,
+      "visiblePixelLength": 49152,
+      "originalIndicesSha256": "71a695014e65b0e416bf6cb359653766298e135df9b212a5052fd5860a5bf89b",
+      "replacementIndicesSha256": "1bc5dcdd63bf31014f608a83ab82ade94f4cbdb3cb2d2aa1898d02831bbfc3fb",
+      "xorSha256": "0e8b8e2b558c26c7f48634a1ea3bcac7703f40303f2556695e742bcf3ff5b1a1"
+    },
+    {
+      "ufpDiscPath": "UFP/2D.UFP",
+      "ufpEntryPath": "2d/charaentry/pt_005.psi",
+      "xorPath": "patches/psi/2d_charaentry_pt_005.psi.indices.xor",
+      "width": 288,
+      "height": 48,
+      "sourceStride": 288,
+      "imageDataOffset": 1440,
+      "visiblePixelLength": 13824,
+      "originalIndicesSha256": "0565d41119b350754c3d97f83bdafae4d25736e64826a8f682215f1417e842ea",
+      "replacementIndicesSha256": "05b7987edaacd9f5586da5f74504dcd511e0485038aa2b79c74ccc87c190c21a",
+      "xorSha256": "6835bee66625a317036821ecebec02348da10a6697942d5e67fcc126fa4153c3"
+    },
+    {
+      "ufpDiscPath": "UFP/2D.UFP",
+      "ufpEntryPath": "2d/charaentry/pt_004.psi",
+      "xorPath": "patches/psi/2d_charaentry_pt_004.psi.indices.xor",
+      "width": 432,
+      "height": 32,
+      "sourceStride": 432,
+      "imageDataOffset": 1952,
+      "visiblePixelLength": 13824,
+      "originalIndicesSha256": "f3b616f46a6f7680ebe58d14b5ef4e43729fb10514310941a6a10479e4d0b02d",
+      "replacementIndicesSha256": "1140b75b8c0984bf824cfff6afd10c52c6fa731f8fdfc1ad25301bf45b392bd9",
+      "xorSha256": "7cb606f609a9f9268c266b2aa134647ad028dec3bdcfa73ab582adb1c965469f"
+    },
+    {
+      "ufpDiscPath": "UFP/2D.UFP",
+      "ufpEntryPath": "2d/shop/new/ps_003.psi",
+      "xorPath": "patches/psi/2d_shop_new_ps_003.psi.indices.xor",
+      "width": 512,
+      "height": 48,
+      "sourceStride": 512,
+      "imageDataOffset": 2080,
+      "visiblePixelLength": 24576,
+      "originalIndicesSha256": "82e910032fa0c441db2d6801911160f7b7f3eca151eb0c1dc410ce11abb852ee",
+      "replacementIndicesSha256": "d298aee97fc15c9d0353c090b1d775e5600ebeea7ec5ed776c509bcdd2662c24",
+      "xorSha256": "c319262fec697e18b2cb1f1be0f395af0b5f5a274f65f8590eb2affbbd378fec"
+    }
+  ]
+}
