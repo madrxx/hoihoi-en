@@ -2,7 +2,7 @@
 // list copies, and the outfit relation table from GAME.UFP, applies English
 // string replacements, rebuilds string pools, and writes all tables back.
 // Also provides DumpItemTexts for inspecting current on-disc text.
-package main
+package patcher
 
 import (
 	"fmt"
@@ -10,51 +10,21 @@ import (
 
 	"github.com/madrxx/hoihoi-en/bsv"
 	"github.com/madrxx/hoihoi-en/game"
+	"github.com/madrxx/hoihoi-en/text"
 )
 
-type ItemTextPatch struct {
-	MainRow int
 
-	Name        *string
-	ListName    *string
-	HUDName     *string
-	Description *string
-	Info1       *string
-	Info2       *string
-	Info3       *string
-}
 
-func strptr(s string) *string {
-	return &s
-}
 
-type ItemTextRecord struct {
-	Name        []byte
-	Type        []byte
-	Info1       []byte
-	Info2       []byte
-	Info3       []byte
-	Description []byte
-}
 
-type ItemListRecord struct {
-	Name     []byte
-	Category []byte
-}
-
-type OutfitRelationRecord struct {
-	Name     []byte
-	NoCond   []byte
-	WithCond []byte
-}
 
 // readMainItemRecords reads all rows from the main item BSV table, extracting
 // name, type, info (3 lines), and description fields for each row.
-func readMainItemRecords(p *Patcher, t BSVTable) []ItemTextRecord {
-	records := make([]ItemTextRecord, int(t.RowCount))
+func readMainItemRecords(p *Patcher, t BSVTable) []text.ItemTextRecord {
+	records := make([]text.ItemTextRecord, int(t.RowCount))
 
 	for row := 0; row < int(t.RowCount); row++ {
-		records[row] = ItemTextRecord{
+		records[row] = text.ItemTextRecord{
 			Name:        p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.ItemFieldName))),
 			Type:        p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.ItemFieldType))),
 			Info1:       p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.ItemFieldInfo1))),
@@ -69,11 +39,11 @@ func readMainItemRecords(p *Patcher, t BSVTable) []ItemTextRecord {
 
 // readItemListRecords reads all rows from an item list BSV table, extracting
 // name and category fields.
-func readItemListRecords(p *Patcher, t BSVTable) []ItemListRecord {
-	records := make([]ItemListRecord, int(t.RowCount))
+func readItemListRecords(p *Patcher, t BSVTable) []text.ItemListRecord {
+	records := make([]text.ItemListRecord, int(t.RowCount))
 
 	for row := 0; row < int(t.RowCount); row++ {
-		records[row] = ItemListRecord{
+		records[row] = text.ItemListRecord{
 			Name:     p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.ItemListFieldName))),
 			Category: p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.ItemListFieldCategory))),
 		}
@@ -84,11 +54,11 @@ func readItemListRecords(p *Patcher, t BSVTable) []ItemListRecord {
 
 // readOutfitRelationRecords reads all rows from the outfit relation BSV
 // table, extracting name, no-condition, and with-condition fields.
-func readOutfitRelationRecords(p *Patcher, t BSVTable) []OutfitRelationRecord {
-	records := make([]OutfitRelationRecord, int(t.RowCount))
+func readOutfitRelationRecords(p *Patcher, t BSVTable) []text.OutfitRelationRecord {
+	records := make([]text.OutfitRelationRecord, int(t.RowCount))
 
 	for row := 0; row < int(t.RowCount); row++ {
-		records[row] = OutfitRelationRecord{
+		records[row] = text.OutfitRelationRecord{
 			Name:     p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.OutfitFieldName))),
 			NoCond:   p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.OutfitFieldNoCond))),
 			WithCond: p.ReadBSVString(t, p.ReadFileU32LE(t.FilePath, t.FieldOffset(row, game.OutfitFieldWithCond))),
@@ -100,7 +70,7 @@ func readOutfitRelationRecords(p *Patcher, t BSVTable) []OutfitRelationRecord {
 
 // applyMainItemPatches overwrites fields in main item records with English
 // text from the patch list. nil patch fields leave the original text untouched.
-func applyMainItemPatches(records []ItemTextRecord, patches []ItemTextPatch) {
+func applyMainItemPatches(records []text.ItemTextRecord, patches []text.ItemTextPatch) {
 	seen := map[int]bool{}
 
 	for _, patch := range patches {
@@ -221,7 +191,7 @@ var mainRowToItemListRow = map[int]int{
 
 // applyItemListPatches updates item list records with English names,
 // using the main-to-list row mapping to translate indices.
-func applyItemListPatches(records []ItemListRecord, patches []ItemTextPatch) {
+func applyItemListPatches(records []text.ItemListRecord, patches []text.ItemTextPatch) {
 	for _, patch := range patches {
 		listRow, ok := mainRowToItemListRow[patch.MainRow]
 		if !ok {
@@ -244,7 +214,7 @@ func applyItemListPatches(records []ItemListRecord, patches []ItemTextPatch) {
 
 // writeMainItemRecords rebuilds the main item table's string pool and writes
 // all rows back, duplicating the name reference to both name fields.
-func writeMainItemRecords(p *Patcher, t BSVTable, records []ItemTextRecord) {
+func writeMainItemRecords(p *Patcher, t BSVTable, records []text.ItemTextRecord) {
 	pw := bsv.NewPoolWriter(p, t)
 	bsv.RebuildPool(&pw, p.collectEMANRefs(t), p.collectDNIKRefs(t))
 
@@ -264,7 +234,7 @@ func writeMainItemRecords(p *Patcher, t BSVTable, records []ItemTextRecord) {
 
 // writeItemListRecords rebuilds an item list table's string pool and writes
 // all rows back, duplicating the name reference to both name fields.
-func writeItemListRecords(p *Patcher, t BSVTable, records []ItemListRecord) {
+func writeItemListRecords(p *Patcher, t BSVTable, records []text.ItemListRecord) {
 	pw := bsv.NewPoolWriter(p, t)
 	bsv.RebuildPool(&pw, p.collectEMANRefs(t), p.collectDNIKRefs(t))
 
@@ -279,7 +249,7 @@ func writeItemListRecords(p *Patcher, t BSVTable, records []ItemListRecord) {
 
 // writeOutfitRelationRecords rebuilds the outfit relation table's string
 // pool and writes all rows back.
-func writeOutfitRelationRecords(p *Patcher, t BSVTable, records []OutfitRelationRecord) {
+func writeOutfitRelationRecords(p *Patcher, t BSVTable, records []text.OutfitRelationRecord) {
 	pw := bsv.NewPoolWriter(p, t)
 	bsv.RebuildPool(&pw, p.collectEMANRefs(t), p.collectDNIKRefs(t))
 
@@ -294,7 +264,7 @@ func writeOutfitRelationRecords(p *Patcher, t BSVTable, records []OutfitRelation
 // ItemTexts applies English text patches to all item/weapon/outfit BSV
 // tables: main item table, both item list copies, and the outfit relation
 // table. Each table's string pool is rebuilt after patching.
-func (p *Patcher) ItemTexts(patches []ItemTextPatch) {
+func (p *Patcher) ItemTexts(patches []text.ItemTextPatch) {
 	mainTable := p.OpenBSVTable(game.GameUFP, game.BSVMainItem)
 	itemList1 := p.OpenBSVTable(game.GameUFP, game.BSVItemList1)
 	itemList2 := p.OpenBSVTable(game.GameUFP, game.BSVItemList2)

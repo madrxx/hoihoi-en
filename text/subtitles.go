@@ -11,10 +11,10 @@
 // represent voice lines that exist in the script but have no dialogue
 // (character barks, SFX-only moments, etc.).
 
-package main
+package text
 
 // Pharmacy customer
-var advSubtitlePatches = []AdvSubtitlePatch{
+var AdvSubtitles = []AdvSubtitlePatch{
 	{EventIndex: 0x0007, VoiceID: 0x0000, Text: "Um, excuse me!"},
 	{EventIndex: 0x0007, VoiceID: 0x0001, Text: "You dropped this."},
 	{EventIndex: 0x0007, VoiceID: 0x0002, Text: "You know, you get points when\n" +

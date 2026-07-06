@@ -3,7 +3,7 @@
 // variants), replaces them with English text, and rewrites all u32 string
 // references. If the replacement is longer than the original, the SRTS
 // section is grown by shifting EMAN/DNIK/ATAD downward.
-package main
+package patcher
 
 import (
 	"log"
@@ -11,18 +11,10 @@ import (
 	"github.com/madrxx/hoihoi-en/bsv"
 	"github.com/madrxx/hoihoi-en/encoding"
 	"github.com/madrxx/hoihoi-en/game"
+	"github.com/madrxx/hoihoi-en/text"
 )
 
-type EventModalPatch struct {
-	Base    uint64
-	OldText string
-	NewText string
-}
 
-type eventModalSRTSString struct {
-	Rel uint32
-	Raw []byte
-}
 
 func alignEventModalU64(value, alignment uint64) uint64 {
 	if alignment == 0 {
@@ -62,8 +54,8 @@ func eventModalSRTSEnd(t BSVTable) uint64 {
 // collecting every null-terminated string and its base-relative offset.
 // This is more conservative than reading via u32 references  -- it finds all
 // strings regardless of whether they are currently referenced.
-func (p *Patcher) collectEventModalSRTSStrings(t BSVTable) []eventModalSRTSString {
-	out := []eventModalSRTSString{}
+func (p *Patcher) collectEventModalSRTSStrings(t BSVTable) []text.EventModalSRTSString {
+	out := []text.EventModalSRTSString{}
 
 	pos := t.SRTSPoolStart()
 	end := eventModalSRTSEnd(t)
@@ -97,7 +89,7 @@ func (p *Patcher) collectEventModalSRTSStrings(t BSVTable) []eventModalSRTSStrin
 		raw := make([]byte, nul)
 		copy(raw, data[:nul])
 
-		out = append(out, eventModalSRTSString{
+		out = append(out, text.EventModalSRTSString{
 			Rel: uint32(pos - t.Base),
 			Raw: raw,
 		})
@@ -108,7 +100,7 @@ func (p *Patcher) collectEventModalSRTSStrings(t BSVTable) []eventModalSRTSStrin
 	return out
 }
 
-func eventModalStringStartSet(strings []eventModalSRTSString) map[uint32]bool {
+func eventModalStringStartSet(strings []text.EventModalSRTSString) map[uint32]bool {
 	out := map[uint32]bool{}
 	for _, s := range strings {
 		out[s.Rel] = true
@@ -195,7 +187,7 @@ func (p *Patcher) growEventModalSRTSBy(t BSVTable, delta uint64) {
 // Rebuilds the existing SRTS area from referenced strings only, replacing one
 // modal label. If required, it grows SRTS by 0x10 into the fixed BSV tail buffer.
 // It does not use ASCII; NewText goes through EncodePatchText, i.e. fullwidth.
-func (p *Patcher) patchOneEventModalLabel(patch EventModalPatch) {
+func (p *Patcher) patchOneEventModalLabel(patch text.EventModalPatch) {
 	t := eventModalOpenBSV(p, patch.Base)
 
 	strings := p.collectEventModalSRTSStrings(t)
@@ -243,7 +235,7 @@ func (p *Patcher) patchOneEventModalLabel(patch EventModalPatch) {
 		Raw    []byte
 	}
 
-	buildKept := func(t BSVTable, strings []eventModalSRTSString, refs map[uint32][]uint64) ([]keptString, uint64) {
+	buildKept := func(t BSVTable, strings []text.EventModalSRTSString, refs map[uint32][]uint64) ([]keptString, uint64) {
 		kept := []keptString{}
 		cursorRel := uint32(t.SRTSPoolStart() - t.Base)
 
@@ -321,7 +313,7 @@ func (p *Patcher) patchOneEventModalLabel(patch EventModalPatch) {
 
 // EventModalLabels applies all event modal label replacements to the disc.
 func (p *Patcher) EventModalLabels() {
-	for _, patch := range eventModalPatches {
+	for _, patch := range text.EventModals {
 		p.patchOneEventModalLabel(patch)
 	}
 }

@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/madrxx/hoihoi-en/disc"
+	"github.com/madrxx/hoihoi-en/patcher"
 	"github.com/madrxx/hoihoi-en/ufp"
 )
 
@@ -129,8 +130,8 @@ func loadImage(path string) []byte {
 
 // loadPatcher reads a disc image and returns an initialised Patcher.
 // Used by most subcommands that take <bin-path> as their first argument.
-func loadPatcher(binPath string) Patcher {
-	return newPatcher(loadImage(binPath))
+func loadPatcher(binPath string) *patcher.Patcher {
+	return patcher.New(loadImage(binPath))
 }
 
 func runBinOffsetToFileOffset(args []string) {
@@ -226,59 +227,59 @@ func runListFiles(args []string) {
 }
 
 func runPatch(args []string) {
-	patcher := loadPatcher(args[0])
-	applyPatches(&patcher)
+	p := loadPatcher(args[0])
+	patcher.ApplyAll(p)
 
-	err := os.WriteFile(args[1], patcher.Image, 0644)
+	err := os.WriteFile(args[1], p.Image, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func runDumpMissions(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.DumpMissionTexts()
+	p := loadPatcher(args[0])
+	p.DumpMissionTexts()
 }
 
 func runDumpItems(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.DumpItemTexts()
+	p := loadPatcher(args[0])
+	p.DumpItemTexts()
 }
 
 func runExtractPSS(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.ExtractPSS(args[1], args[2])
+	p := loadPatcher(args[0])
+	p.ExtractPSS(args[1], args[2])
 }
 
 func runMakePSSXOR(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.MakePSSXOR(args[1], args[2])
+	p := loadPatcher(args[0])
+	p.MakePSSXOR(args[1], args[2])
 }
 
 func runRecoverPSS(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.RecoverPSS(args[1], args[2], args[3])
+	p := loadPatcher(args[0])
+	p.RecoverPSS(args[1], args[2], args[3])
 }
 
 func runExtractPSI(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.ExtractPSI(args[1], args[2], args[3])
+	p := loadPatcher(args[0])
+	p.ExtractPSI(args[1], args[2], args[3])
 }
 
 func runMakePSIXOR(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.MakePSIXOR(args[1], args[2])
+	p := loadPatcher(args[0])
+	p.MakePSIXOR(args[1], args[2])
 }
 
 func runRecoverPSI(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.RecoverPSI(args[1], args[2], args[3])
+	p := loadPatcher(args[0])
+	p.RecoverPSI(args[1], args[2], args[3])
 }
 
 func runListUFP(args []string) {
-	patcher := loadPatcher(args[0])
+	p := loadPatcher(args[0])
 
-	ufpData := patcher.ReadWholeFile(args[1])
+	ufpData := p.ReadWholeFile(args[1])
 	entries, err := ufp.Parse(ufpData)
 	if err != nil {
 		log.Fatal(err)
@@ -296,8 +297,8 @@ func runListUFP(args []string) {
 }
 
 func runExtractPSIAll(args []string) {
-	patcher := loadPatcher(args[0])
-	patcher.ExtractAllPSI(args[1], args[2])
+	p := loadPatcher(args[0])
+	p.ExtractAllPSI(args[1], args[2])
 }
 
 func main() {

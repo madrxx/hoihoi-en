@@ -1,4 +1,4 @@
-package main
+package patcher
 
 import "github.com/madrxx/hoihoi-en/encoding"
 

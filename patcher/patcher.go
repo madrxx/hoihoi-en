@@ -3,7 +3,7 @@
 // translate between file-relative offsets and raw .bin offsets, crossing
 // 2352-byte CD sector boundaries transparently.
 
-package main
+package patcher
 
 import (
 	"encoding/binary"
@@ -21,13 +21,13 @@ type Patcher struct {
 	Files []disc.File // parsed ISO 9660 file list
 }
 
-func newPatcher(image []byte) Patcher {
+func New(image []byte) *Patcher {
 	files, err := disc.ListFiles(image)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return Patcher{
+	return &Patcher{
 		Image: image,
 		Files: files,
 	}

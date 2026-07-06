@@ -10,9 +10,9 @@
 //
 // Missions 0-3 are Area 1 (1-1 through 1-4), 4-9 are Area 2, etc.
 
-package main
+package text
 
-var missionPatches = []MissionPatch{
+var Missions = []MissionPatch{
 	{
 		Index:       0,
 		Title:       "My First Job",

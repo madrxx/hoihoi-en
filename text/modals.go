@@ -10,9 +10,9 @@
 // English text is longer than the Japanese, the SRTS section is grown
 // to accommodate it.
 
-package main
+package text
 
-var eventModalPatches = []EventModalPatch{
+var EventModals = []EventModalPatch{
 	{
 		Base:    0x2FB000,
 		OldText: "ポイントカードを受け取った",

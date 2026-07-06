@@ -1,6 +1,9 @@
-package main
+package patcher
 
-// ADV cutscene subtitle injection. Contains:
+// ADV cutscene subtitle injection. Generates MIPS machine code at build time
+// that is written into a code cave in the game executable, constructing a 2D
+// sprite overlay for English subtitles during voiced cutscenes. Also handles
+// the binary subtitle lookup table and string pool in the cave.
 
 import (
 	"encoding/binary"
@@ -9,15 +12,11 @@ import (
 	"github.com/madrxx/hoihoi-en/cave"
 	"github.com/madrxx/hoihoi-en/encoding"
 	"github.com/madrxx/hoihoi-en/mips"
+	"github.com/madrxx/hoihoi-en/text"
 )
 
 const maxSubtitleLines = 4
 
-type AdvSubtitlePatch struct {
-	EventIndex uint32
-	VoiceID    uint32
-	Text       string
-}
 
 func splitSubtitleLines(text string) []string {
 	if strings.TrimSpace(text) == "" {
@@ -42,7 +41,7 @@ func splitSubtitleLines(text string) []string {
 // WriteAdvSubtitleTable serialises the ADV subtitle lookup table and its
 // string pool into the code cave. Each entry maps (eventIndex, voiceID) to
 // up to 4 subtitle lines. The string pool follows the fixed-size table.
-func (p *Patcher) WriteAdvSubtitleTable(file string, tableOffset uint64, caveEndOffset uint64, patches []AdvSubtitlePatch, emptyRuntime uint32) {
+func (p *Patcher) WriteAdvSubtitleTable(file string, tableOffset uint64, caveEndOffset uint64, patches []text.AdvSubtitlePatch, emptyRuntime uint32) {
 	const runtimeBase uint32 = 0x000FFF80
 	const entrySize uint64 = 28 // event, voice, lineCount, line0, line1, line2, line3
 
@@ -577,7 +576,7 @@ func appendStringSpriteInit(buf *mips.CodeBuf, subtitleStringRuntime uint32, emp
 	buf.Add(mips.Addiu(2, 0, 10099), mips.Sw(2, mips.RootZIndex, 3), mips.Addiu(2, 0, 0x10), mips.Sw(2, mips.RootPosX, 3), mips.Addiu(2, 0, textY), mips.Sw(2, mips.RootPosY, 3), mips.Sb(0, mips.RootVisible, 3))
 }
 
-// AdvSubtitlePatch injects a complete English subtitle rendering
+// text.AdvSubtitlePatch injects a complete English subtitle rendering
 // system into the game's ADV cutscene engine.
 //
 // Memory layout of the code cave (0x00159844 - 0x00163400 in SLPM_623.91):
@@ -653,7 +652,7 @@ func (p *Patcher) AdvSubtitlePatch() {
 	p.WriteFileBytes(file, debugBufferOff, make([]byte, layout.Region("debugBuffer").Size))
 	p.WriteFileBytes(file, bgRootOff, make([]byte, layout.Region("bgRoot").Size))
 	p.WriteFileBytes(file, hexTableOff, []byte{0x82, 0x4F, 0x82, 0x50, 0x82, 0x51, 0x82, 0x52, 0x82, 0x53, 0x82, 0x54, 0x82, 0x55, 0x82, 0x56, 0x82, 0x57, 0x82, 0x58, 0x82, 0x60, 0x82, 0x61, 0x82, 0x62, 0x82, 0x63, 0x82, 0x64, 0x82, 0x65})
-	p.WriteAdvSubtitleTable(file, subtitleTableOff, caveEndOff, advSubtitlePatches, emptyRuntime)
+	p.WriteAdvSubtitleTable(file, subtitleTableOff, caveEndOff, text.AdvSubtitles, emptyRuntime)
 
 	initBuf := mips.NewCodeBuf()
 	initBuf.Add(mips.Addiu(29, 29, -0x20), 0xFFBF0010)
@@ -673,7 +672,7 @@ func (p *Patcher) AdvSubtitlePatch() {
 	initHelper := initBuf.Words()
 
 	bgInitHelper := buildTelopBgInitHelper(bgRootRuntime)
-		showHelper := buildShowHelper(subtitleTableRuntime, debugBufferRuntime, hexTableRuntime, subtitleStrings, emptyRuntime, bgRootRuntime, subtitleTextY, len(advSubtitlePatches)+1)
+		showHelper := buildShowHelper(subtitleTableRuntime, debugBufferRuntime, hexTableRuntime, subtitleStrings, emptyRuntime, bgRootRuntime, subtitleTextY, len(text.AdvSubtitles)+1)
 	hideHelper := buildHideHelper(subtitleStrings, emptyRuntime, bgRootRuntime)
 	doneCleanupHelper := buildAdvDoneCleanupHelper(subtitleStrings, emptyRuntime, bgRootRuntime)
 

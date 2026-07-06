@@ -4,7 +4,7 @@
 // deltas from edited files, and ApplyPSSPatch/ApplyPSIPatches/RecoverPSS/
 // RecoverPSI for applying and reconstructing assets.
 
-package main
+package patcher
 
 import (
 	"log"

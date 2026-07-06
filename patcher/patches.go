@@ -1,8 +1,8 @@
 // Patch orchestration  -- defines the ordered list of 17 patch groups and
-// the applyPatches() driver that runs them all. The order is fixed and
+// the ApplyAll() driver that runs them all. The order is fixed and
 // must match the golden reference binary.
 
-package main
+package patcher
 
 // patchGroup describes one patch step in the translation pipeline.
 type patchGroup struct {
@@ -31,8 +31,8 @@ var patchGroups = []patchGroup{
 	{"DebugMenu", applyDebugMenuPatch},
 }
 
-// applyPatches runs every patch group against the patcher, in order.
-func applyPatches(p *Patcher) {
+// ApplyAll runs every patch group against the patcher, in order.
+func ApplyAll(p *Patcher) {
 	for _, g := range patchGroups {
 		g.apply(p)
 	}

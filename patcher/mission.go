@@ -2,7 +2,7 @@
 // GAME.UFP's mission BSV table, applies English title, description, and
 // confirmation line replacements, rebuilds the string pool, and writes
 // all records back. Also provides DumpMissionTexts for inspection.
-package main
+package patcher
 
 import (
 	"fmt"
@@ -10,6 +10,7 @@ import (
 
 	"github.com/madrxx/hoihoi-en/bsv"
 	"github.com/madrxx/hoihoi-en/game"
+	"github.com/madrxx/hoihoi-en/text"
 )
 
 const (
@@ -17,26 +18,7 @@ const (
 	missionRecordStart uint64 = 0x1D99D4
 )
 
-type MissionPatch struct {
-	// Zero-based mission index.
-	Index int
 
-	// Mission title. If empty, keep existing title.
-	Title string
-	// Mission title. If empty, keep existing description.
-	Description string
-
-	// Mission objectives. nil keeps all existing text, non-nil replaces all lines. Up to four lines are used, missing lines become blank.
-	ConfirmLines []string
-}
-
-type missionRecordText struct {
-	Number      []byte
-	ID          []byte
-	Title       []byte
-	Description []byte
-	Confirm     [4][]byte
-}
 
 func missionRecordOffset(index int) uint64 {
 	return missionRecordStart + uint64(index)*game.MissionRecordSize
@@ -52,11 +34,11 @@ func readMissionRawString(p *Patcher, table BSVTable, relOffset uint32) []byte {
 
 // readMissionRecords reads all mission records from the mission BSV table,
 // extracting number, ID, title, description, and four confirmation lines.
-func readMissionRecords(p *Patcher, table BSVTable) []missionRecordText {
-	records := make([]missionRecordText, game.MissionRecordCount)
+func readMissionRecords(p *Patcher, table BSVTable) []text.MissionRecordText {
+	records := make([]text.MissionRecordText, game.MissionRecordCount)
 
 	for i := 0; i < game.MissionRecordCount; i++ {
-		records[i] = missionRecordText{
+		records[i] = text.MissionRecordText{
 			Number:      readMissionRawString(p, table, missionFieldRelOffset(p, i, game.MissionFieldNumber)),
 			ID:          readMissionRawString(p, table, missionFieldRelOffset(p, i, game.MissionFieldID)),
 			Title:       readMissionRawString(p, table, missionFieldRelOffset(p, i, game.MissionFieldTitle)),
@@ -77,7 +59,7 @@ func readMissionRecords(p *Patcher, table BSVTable) []missionRecordText {
 // applyMissionPatches overwrites mission record fields with English text
 // from the patch list. Empty Title/Description and nil ConfirmLines leave
 // the original text untouched.
-func applyMissionPatches(records []missionRecordText, patches []MissionPatch) {
+func applyMissionPatches(records []text.MissionRecordText, patches []text.MissionPatch) {
 	seen := make(map[int]bool)
 
 	for _, patch := range patches {
@@ -127,7 +109,7 @@ func writeMissionStringOffset(p *Patcher, index int, fieldOffset uint64, relOffs
 // writeMissionRecords rebuilds the mission table's string pool (clearing
 // only the mission text sub-range, not column names/enums or tail data) and
 // writes all rows back.
-func writeMissionRecords(p *Patcher, table BSVTable, records []missionRecordText) {
+func writeMissionRecords(p *Patcher, table BSVTable, records []text.MissionRecordText) {
 	// Clear only the mission text area.
 	//
 	// Do not clear the whole SRTS payload: earlier column names/enums and later
@@ -150,7 +132,7 @@ func writeMissionRecords(p *Patcher, table BSVTable, records []missionRecordText
 
 // MissionTexts applies English title, description, and confirmation line
 // patches to the mission BSV table.
-func (p *Patcher) MissionTexts(patches []MissionPatch) {
+func (p *Patcher) MissionTexts(patches []text.MissionPatch) {
 	table := p.OpenBSVTable(game.GameUFP, game.BSVMission)
 
 	records := readMissionRecords(p, table)

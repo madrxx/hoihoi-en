@@ -1,13 +1,16 @@
-package main
+package patcher
 
-import "github.com/madrxx/hoihoi-en/encoding"
+import (
+	"github.com/madrxx/hoihoi-en/encoding"
+	"github.com/madrxx/hoihoi-en/text"
+)
 
 // applyWeaponPatch replaces HUD weapon display strings, card/point/puzzle
 // format strings, and ammo counters in SLPM_623.91 at 0x16E346-0x16E40B,
 // then applies all item and weapon name patches.
 func applyWeaponPatch(p *Patcher) {
 	p.WriteFileBytes("SLPM_623.91", 0x16E380, encoding.GameText("Press □\nto play\naudio."))
-	p.ItemAndWeaponTexts(itemPatches)
+	p.ItemAndWeaponTexts(text.Items)
 
 	pointCardText := toSJIS(encoding.ToFullWidth("Card "), 0)
 	pointCardText = append(pointCardText, []byte("%s")...)

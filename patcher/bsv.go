@@ -1,8 +1,7 @@
-package main
-
-// BSV table I/O for the root package  -- type aliases, table opening, string
-// reading, and EMAN/DNIK reference collection. All BSV operations go
+// BSV table I/O for the patcher package  -- type aliases, table opening,
+// string reading, and EMAN/DNIK reference collection. All BSV operations go
 // through the Patcher struct for sector-boundary-crossing I/O.
+package patcher
 
 import (
 	"log"

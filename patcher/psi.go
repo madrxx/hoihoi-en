@@ -4,7 +4,7 @@
 // batch application (grouped by UFP archive), and RecoverPSI for
 // reconstructing textures from disc originals and XOR deltas.
 
-package main
+package patcher
 
 import (
 	"fmt"

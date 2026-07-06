@@ -3,7 +3,7 @@
 // pointer table at the HUD weapon name cave region and applies all item
 // text patches to the BSV tables.
 
-package main
+package patcher
 
 import (
 	"encoding/binary"
@@ -11,6 +11,7 @@ import (
 
 	"github.com/madrxx/hoihoi-en/encoding"
 	"github.com/madrxx/hoihoi-en/game"
+	"github.com/madrxx/hoihoi-en/text"
 )
 
 // writeHUDWeaponNames encodes weapon names to game text, writes them into
@@ -40,7 +41,7 @@ func (p *Patcher) writeHUDWeaponNames(names []string) {
 
 // hudNamesFromItemPatches extracts HUD display names from item patches,
 // falling back from HUDName to Name for each main table row.
-func hudNamesFromItemPatches(patches []ItemTextPatch) []string {
+func hudNamesFromItemPatches(patches []text.ItemTextPatch) []string {
 	names := make([]string, game.HUDWeaponCount)
 	for _, patch := range patches {
 		if patch.MainRow < 0 || patch.MainRow >= len(names) {
@@ -57,7 +58,7 @@ func hudNamesFromItemPatches(patches []ItemTextPatch) []string {
 
 // ItemAndWeaponTexts applies item/weapon/outfit text patches to BSV tables
 // and writes HUD weapon name strings into the executable's code cave.
-func (p *Patcher) ItemAndWeaponTexts(patches []ItemTextPatch) {
+func (p *Patcher) ItemAndWeaponTexts(patches []text.ItemTextPatch) {
 	p.ItemTexts(patches)
 	p.writeHUDWeaponNames(hudNamesFromItemPatches(patches))
 }
