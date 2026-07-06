@@ -1,12 +1,24 @@
 # hoihoi-en
 
+> [!WARNING]
+> This patch needs testing. I have not completed the whole game using it and so I wouldn't recommend anyone distribute pre-patched builds of the game given it might turn out there's some random crash right at the end or something.
+> 
+> I produced these patches with the help of [the Debug Menu](https://tcrf.net/Ichigeki_Sacchuu!!_HoiHoi-San) found and documented by [Punk7890](https://tcrf.net/User:Punk7890) on TCRF, so I haven't played everything sequentially. And I'm actually really bad at this game so I haven't beaten the final boss yet, even with every weapon unlocked through cheats...
+> 
+> Please, please, please notify me of any crashes, untranslated Japanese text, or messed up text formatting/rendering, and hopefully soon I can comfortably remove this warning!
+
 ![A screenshot of an ADV cutscene in the game, with the English subtitle patch applied](img/screenshot.png)
 
-English translation patch for the PlayStation 2 game *Ichigeki Sacchu!! Hoihoi-san* (SLPM_623.91). Byte-patches the disc image with English text, modified UI images and subtitled FMVs.
+English translation patch for the PlayStation 2 game *Ichigeki Sacchu!! Hoihoi-san* (**SLPM_623.91**). Byte-patches the disc image with English-translated text, UI images and FMVs.
 
-Requires a sector-by-sector .bin/.cue disc image of the game. The sha256sum of my clean disc image is: `0f1e4b15655a6249e5e56557dfef2f2c43d53b07dc5ecaf6f6b1ed9ca40fe63d`
+## Requirements
 
-Not tested on SLPM_623.90 (Limited Edition), SLPM_627.21 (Konami The Best), SLKA_150.15 (South Korean release), but the patcher won't work on these versions without modification since the patcher has the game executable name hard coded. I haven't got any of these versions to test with. If you can test these, please add support or let me know what the differences!
+- Go 1.21+
+- `golang.org/x/text` (encoding package)
+- A sector-by-sector .bin/.cue disc image of the game, specifically *SLPM_623.91*. The sha256sum of my clean disc image is: `0f1e4b15655a6249e5e56557dfef2f2c43d53b07dc5ecaf6f6b1ed9ca40fe63d`
+
+> [!WARNING]
+> Not tested on SLPM_623.90 (Limited Edition), SLPM_627.21 (Konami The Best), or SLKA_150.15 (South Korean release). The patcher definitely won't work on these versions without modification since it has the game executable name hardcoded, but I've no idea if the executable is actually different or not since I haven't got any of these versions to test with. If you can test these, please add support or let me know what the differences are!
 
 ## Using the patcher
 
@@ -16,10 +28,6 @@ go build -o hoihoi-en .
 ```
 where `clean/hoihoi.bin` is a clean copy of the game, and `patched/hoihoi.bin` is the location where you want the patcher to put the patched copy.
 
-## Requirements
-
-- Go 1.21+
-- `golang.org/x/text` (encoding package)
 
 ## Patches
 
@@ -29,11 +37,13 @@ ADVs are translated through the addition of a subtitle overlay (an injected MIPS
 
 ## Translation
 
-I am not fluent in Japanese. I crossreferenced different on-device machine transcriptions (Private Transcriber Pro, Apple Speech, WhisperKit), machine translations (Google Translate, DeepL and Apple Translate) and Japanese-English and Japanese-Japanese dictionaries to complete this translation. I worry that machine translation might be a topic of debate, but it wasn't a lazy copy-paste-from-Google-Translate job. I put a lot of effort into precise translation or intentionally opinionated translation, as appropriate. If you would like to contribute a better translation or if you notice anything I've messed up, please open an issue or PR! In some cases, I was limited in available space in the binary, but if you open an issue for something or message me somewhere, I can explain my reasoning for anything.
+I am not fluent in Japanese (although I'm okay at grammar), so I crossreferenced different machine translations (Google Translate, DeepL and Apple Translate) and Japanese-English and Japanese-Japanese dictionaries to complete this translation. Additionally, I required on-device machine transcriptions (Private Transcriber Pro, Apple Speech, WhisperKit) to understand audio in cutscenes. I worry that machine translation might be a topic of debate, but it wasn't a lazy copy-paste-from-Google-Translate job. I put a lot of effort into understanding the Japanese as well as I could, and I tried to convey as much of the meaning as I could (although I favoured getting the feel and implications of language right as opposed to identical grammatical structure). If you would like to contribute any improvements / alternate translations / notes or if you notice anything I've messed up, please open an issue or PR!
+
+In some cases, I was limited in available space in the binary and that forced certain imprecise translations, but I was very conscious to make this invisible from an English speaker's perspective. I had in my mind the English translation of Phantasy Star and all those really squished down strings and I just tried to avoid that with wording that avoids abbreviating, or moving things in memory if I had to. A future improvement to free up tons of memory and fit more text on-screen might be to change the string rendering to accept ASCII instead of Shift JIS and display it with half-width characters (which presently isn't possible). But it would require reworking all existing patches and probably fixing up a million screens (assuming that what I'm proposing is even feasible) and I just want to get this out already. If you open an issue for something or message me somewhere, I can try to explain my reasoning for anything.
 
 I have favoured American English in the text of the game, even though I'm from the UK, just because I figured that would be less controversial. :P
 
-A lot of cutscenes in the game mirror scenes from the manga, and in those cases, the Infinity Studios translation guided this translation. I chose to capitalise her name consistently as 'Hoihoi-san', since this is how it's written in Infinity Studios' English translation of the manga. It seems to match with how the ホイホイ logo (in both this and the real-world insect trap product) has the first ホ larger like a capital (though obviously this is not a feature of the language, and the insect trap is officially translated "Hoy Hoy"). The Korean cover also backs this up - it has the logo written in Korean instead of Japanese, apart from Hoihoi-san's name, which is written in Latin characters as "Hᴏɪʜᴏɪsᴀɴ". It's not like 100% proof of anything, and a lot of online product listings and game databases are definitely in favour of HoiHoi-san.
+A lot of cutscenes in the game mirror scenes from the manga, and in those cases, the Infinity Studios translation guided this translation. I chose to capitalise her name consistently as 'Hoihoi-san', since this is how it's written in Infinity Studios' English translation of the manga. It seems to match with how the ホイホイ logo (in both this and the real-world insect trap product) has the first ホ larger like a capital (though obviously this is not a feature of the language, and the insect trap is officially translated "Hoy Hoy"). The Korean cover of the game also backs this up - it has the logo written in Korean instead of Japanese, apart from Hoihoi-san's name, which is written in Latin characters as "Hᴏɪʜᴏɪsᴀɴ". It's not 100% proof, and a lot of online product listings and game databases are definitely in favour of HoiHoi-san.
 
 ## CLI
 
