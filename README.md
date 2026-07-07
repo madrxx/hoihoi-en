@@ -76,11 +76,13 @@ Commands other than the `patch` command will not be useful to most users, but ar
 | `bsv` | BSV table format - string pool bookkeeping, SRTS/EMAN/DNIK/ATAD |
 | `psi` | PSI (3ISP) texture format - palette swizzling, indexed PNG round-trip |
 | `mips` | MIPS IV instruction encoders, CodeBuf builder, sprite field offsets |
-| `cave` | Code cave region allocation model |
-| `asset` | XOR delta manifests, SHA-256 checksum verification |
-| `game` | Named constants for disc paths, BSV table bases, and field indices |
+| `cave` | Code cave region layout and overlap verification |
+| `asset` | XOR delta manifests, SHA-256 checksums, round-trip asset editing via sidecar metadata |
+| `game` | Named constants for disc paths, executable layout, BSV table bases, and field indices |
+| `patcher` | Patch orchestrator: sector-aware I/O, BSV/texture/FMV patching, ADV subtitle injection, 17 patch groups |
+| `text` | English translation data and shared types (items/weapons, missions, modals, subtitles) |
 
-The root package connects these: reading from the disc image, ordering the 17 patch groups, writing the output.
+Root package just handles CLI commands.
 
 ## Verification
 
