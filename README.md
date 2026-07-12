@@ -22,12 +22,22 @@ English translation patch for the PlayStation 2 game *Ichigeki Sacchu!! Hoihoi-s
 
 ## Using the patcher
 
+1. Download the code and extract it somewhere.
+2. Make a folder called `clean` and a folder called `patched` inside the code folder.
+3. Put your clean copy of the game in the clean folder.
+4. Build and use the patcher with the commands below.
+
+#### Linux/macOS
 ```bash
 go build -o hoihoi-en .
 ./hoihoi-en patch clean/hoihoi.bin patched/hoihoi.bin
 ```
-where `clean/hoihoi.bin` is a clean copy of the game, and `patched/hoihoi.bin` is the location where you want the patcher to put the patched copy.
 
+#### Windows
+```bash
+go build -o hoihoi-en.exe .
+./hoihoi-en.exe patch clean/hoihoi.bin patched/hoihoi.bin
+```
 
 ## Patches
 
